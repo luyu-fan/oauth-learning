@@ -263,7 +263,7 @@ token终端显然就是客户端获取访问终端token的地方，除了隐式�
 
 下面是主要关键动作的Http请求：
 
-1. 授权请求
+#### 授权请求
 
 客户端在构建授权请求的时候，所遵循的请求格式如下：
 
@@ -280,6 +280,20 @@ GET /authorize?response_type=code&client_id=s6BhdRkqt3&state=xyz
         &redirect_uri=https%3A%2F%2Fclient%2Eexample%2Ecom%2Fcb HTTP/1.1
 Host: server.example.com
 ```
+
+#### 授权响应
+
+如果经过交互之后，资源拥有者可以授权将授权码返回给用户的回调函数，那么响应需要满足以下的格式：
+
+1. 格式要求：`application/x-www-url-encoded`。
+2. 必须项`code`表示授权码。授权码应该有时间限制，而且是一次性使用。否则，授权服务器将会拒绝请求，而且有可能会收回已经颁发的所有相关token。授权码和客户端的回调URI是绑定在一起的。
+3. 必须项`state`如果在客户端的请求中出现时，他一定会在响应中出现。
+多余的字段应该被忽略。
+
+一个可能的授权响应如下：
+![AuthorizationResponse](http://wilo-common-bucket.oss-cn-hangzhou.aliyuncs.com/notes/oauth2-protocol/authorization%20response.png#pic_center)
+
+#### 错误响应
 
 ## 刷新访问token
 
