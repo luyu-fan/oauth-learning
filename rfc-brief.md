@@ -281,7 +281,7 @@ GET /authorize?response_type=code&client_id=s6BhdRkqt3&state=xyz
 Host: server.example.com
 ```
 
-#### 授权响应
+##### 授权响应
 
 如果经过交互之后，资源拥有者可以授权将授权码返回给用户的回调函数，那么响应需要满足以下的格式：
 
@@ -293,7 +293,7 @@ Host: server.example.com
 一个可能的授权响应如下：
 ![AuthorizationResponse](http://wilo-common-bucket.oss-cn-hangzhou.aliyuncs.com/notes/oauth2-protocol/authorization%20response.png#pic_center)
 
-#### 错误响应
+##### 错误响应
 
 如果请求失败（可能由验证失败、参数错误、客户端id错误、 缺失URI等或缺失等种种错误导致的）授权服务器应该通知资源拥有者这个错误，而不是自动地重定向处理。在拥有者明确拒绝客户端的情况下，授权服务器会返回一个包含了error信息的响应。
 
@@ -319,6 +319,32 @@ Host: server.example.com
 HTTP/1.1 302 Found
    Location: https://client.example.com/cb?error=access_denied&state=xyz
 ```
+
+#### 访问Token请求
+
+在获取token的请求中必须包含以下字段:
+
+`grant_type`必须项，标识授权的类型，一般是授权码还是隐式授权还是用户代理的方式，即那四种方式之一。
+
+`code`必须项，代表了授权码。
+`redirect_uri`必须项、表示重定向地址。
+`client_id`必须项，代表了客户端的ID。
+
+```
+POST /token HTTP/1.1
+     Host: server.example.com
+     Authorization: Basic czZCaGRSa3F0MzpnWDFmQmF0M2JW
+     Content-Type: application/x-www-form-urlencoded
+
+     grant_type=authorization_code&code=SplxlOBeZQQYbYS6WxSbIA
+     &redirect_uri=https%3A%2F%2Fclient%2Eexample%2Ecom%2Fcb
+```
+
+授权服务器必须保证:
+
+- 要求客户端提供身份凭证并验证。
+- 确保授权码和客户端绑定的一致性。
+- 确保重定向uri的合法性和一致性。
 
 ## 刷新访问token
 
