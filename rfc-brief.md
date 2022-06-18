@@ -295,6 +295,31 @@ Host: server.example.com
 
 #### 错误响应
 
+如果请求失败（可能由验证失败、参数错误、客户端id错误、 缺失URI等或缺失等种种错误导致的）授权服务器应该通知资源拥有者这个错误，而不是自动地重定向处理。在拥有者明确拒绝客户端的情况下，授权服务器会返回一个包含了error信息的响应。
+
+`x-www-form-urlencoded`格式的响应中必须包含一个`error`的字段，这个字段的具体值包含了以下几种中的一种：
+
+|code|含义|
+|:----:|:----:|
+|invalid_request|请求中缺失了一个必须的参数，包括未验证通过的情况、超过一次的参数或者其他不合法的情况|
+|unauthorized_client|客户端没有被授权使用该方法来获取授权码，可能是访问方法不对|
+|access_denied|资源拥有者拒绝客户端访问这个资源|
+|unsupported_response_type|服务端不支持使用该方法获取授权码|
+|invalid_scope|错误或者不合适的访问域|
+|server_erroe|授权服务器发生了内部错误，但是由于是重定向的形式，则必须要通过特定的错误码告知客户端服务器内部出现了问题。|
+|temporarily_unavailable|授权服务器临时不可访问，可能是由于临时错误或者是维护等|
+
+除此之外还包括的字段：
+
+`error_description`可选项，人眼可读的描述文本，用于辅助客户端开发者定位、理解和解决错误。
+`error_uri`可选项，利用一个web页面来详细告知客户端开发者的错误信息。
+`state`和请求相对应，当请求携带的时候响应也必然会携带，用于和客户端进行状态同步。
+
+```
+HTTP/1.1 302 Found
+   Location: https://client.example.com/cb?error=access_denied&state=xyz
+```
+
 ## 刷新访问token
 
 ## 访问受保护资源
