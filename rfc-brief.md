@@ -346,6 +346,28 @@ POST /token HTTP/1.1
 - 确保授权码和客户端绑定的一致性。
 - 确保重定向uri的合法性和一致性。
 
+#### 访问Token响应
+
+如果请求合法且验证通过，授权服务器就会颁发合适的访问token，显然如果验证失败等就会返回错误响应。一个成功的响应如下：
+```html
+HTTP/1.1 200 OK
+Content-Type: application/json;charset=UTF-8
+Cache-Control: no-store
+Pragma: no-cache
+
+{
+"access_token":"2YotnFZFEjr1zCsicMWpAA",
+"token_type":"example",
+"expires_in":3600,
+"refresh_token":"tGzv3JOkF0XG5Qx2TlKWIA",
+"example_parameter":"example_value"
+}
+```
+其中有几个重要的点需要注意，第一个是响应返回的格式是json类型，而且禁用缓存。在返回的json数据中会告知token、类型以及过期的时间。
+
+
+
+
 ## 刷新访问token
 
 ## 访问受保护资源
