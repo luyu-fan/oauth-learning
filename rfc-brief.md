@@ -467,6 +467,27 @@ Pragma: no-cache
      }
 ```
 
+### 错误的响应
+
+在请求没有通过验证的情况下，授权服务器会返回一个400响应，并且会包含以下字段：
+
+`error`必须项，一个简短的错误码来告知出现了什么错误，一般是`invalid_request`、`invalid_client`、`invalid_grant`、`unauthorized_client`、`unsupported_grant_type`以及`invalid_scope`这几种。
+
+`error_description`是一个详细说明。
+`error_uri`则是一个错误的详细说明页面。
+
+基本上格式都是统一的。
+
+```
+     HTTP/1.1 400 Bad Request
+     Content-Type: application/json;charset=UTF-8
+     Cache-Control: no-store
+     Pragma: no-cache
+
+     {
+       "error":"invalid_request"
+     }
+```
 
 ## 访问受保护资源
 
