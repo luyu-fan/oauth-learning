@@ -419,8 +419,54 @@ Pragma: no-cache
 
 ### 客户端身份授权
 
+客户端也可以仅仅通过客户端自身的身份信息来获取访问token，当然前提是用户资源已经提前得到了某些授权。
 
-## 刷新访问token
+![ClientCredentials](http://wilo-common-bucket.oss-cn-hangzhou.aliyuncs.com/notes/oauth2-protocol/clientcredentials.png#pic_center)
+
+客户端授权相对比较简单，因为它仅仅需要自身的身份验证即可，因此在验证通过之后就可以得到访问token。也因此，客户端会有自己的身份验证机制，从而
+授权码获取那个步骤可以直接省略。
+
+#### 获取访问Token
+
+因为直接通过客户端身份验证，所以只需要确保`grant_type`这个字段为`client_credentials`，以及合适的访问范围即可获取到访问token。在验证通过的情况下，授权服务器就会返回`application/json`类型的响应。并且不允许缓存。
+
+### 其他可扩展的授权
+
+将需要访问的URI的绝对地址形式作为授权类型，然后去访问获取得到访问token。并且也可添加任何额外的且必要的参数。另外在扩展授权的情况下可能会使用到SAM标记语言。此时在验证通过的情况下，可以同时返回访问token和刷新token。
+
+## 颁发访问Token
+
+在请求验证通过的情况下，一般可以直接返回访问token或者是刷新token，但是刷新token往往是根据授权的类型来决定的，是一个可选项。
+
+### 成功的响应
+
+一个成功的响应主要会包含下列关键字段：
+
+`access_token`必须项。
+`token_type`必须项，代表了token的类型。
+`expires_in`表明token过期的时间。推荐字段。
+`refresh_token`刷新token。
+`scope`可选项。
+
+响应采用的都是标准的json格式。
+
+**所有的包含了token的响应必须有`Cache-Control`字段，而且必须要设置为`no-store`。显然如果客户端无法识别的字段直接忽略。一个成功的响应如下：
+
+```html
+     HTTP/1.1 200 OK
+     Content-Type: application/json;charset=UTF-8
+     Cache-Control: no-store
+     Pragma: no-cache
+
+     {
+       "access_token":"2YotnFZFEjr1zCsicMWpAA",
+       "token_type":"example",
+       "expires_in":3600,
+       "refresh_token":"tGzv3JOkF0XG5Qx2TlKWIA",
+       "example_parameter":"example_value"
+     }
+```
+
 
 ## 访问受保护资源
 
