@@ -18,3 +18,13 @@ GitHub的OAuth应用（OAuth客户端）示例：WebulusTest。
 
 1. 语言：Go(go1.18)
 2. 框架或库：Gin/GoAuthClient
+
+## CheckList
+
+- [x] Standard Backend Project Structure over Go. 使用推荐的标准Go后端结构。
+
+- [ ] 基础的Web后端实现。
+
+- [ ] OAuth 授权实现。
+
+- [ ] OAuth 示例功能实现。
